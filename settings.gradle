@@ -1,14 +1,14 @@
 pluginManagement {
-	repositories {
-		mavenCentral()
-		gradlePluginPortal()
-		maven { url "https://repo.spring.io/release" }
-	}
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://repo.spring.io/release" }
+    }
 }
 
 plugins {
-	id "com.gradle.enterprise" version "3.12.1"
-	id "io.spring.ge.conventions" version "0.0.13"
+    id "com.gradle.enterprise" version "3.12.1"
+    id "io.spring.ge.conventions" version "0.0.13"
 }
 
 include "spring-aop"
@@ -35,23 +35,25 @@ include "spring-webmvc"
 include "spring-websocket"
 include "framework-bom"
 include "integration-tests"
+include 'spring-mytest'
 
 rootProject.name = "spring"
-rootProject.children.each {project ->
-	project.buildFileName = "${project.name}.gradle"
+// 此处导致新建模块的 gradle 文件   命名格式: 模块名.gradle  而不是 默认的 build.gradle
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
 }
 
 settings.gradle.projectsLoaded {
-	gradleEnterprise {
-		buildScan {
-			File buildDir = settings.gradle.rootProject.getBuildDir()
-			buildDir.mkdirs()
-			new File(buildDir, "build-scan-uri.txt").text = "(build scan not generated)"
-			buildScanPublished { scan ->
-				if (buildDir.exists()) {
-					new File(buildDir, "build-scan-uri.txt").text = "${scan.buildScanUri}\n"
-				}
-			}
-		}
-	}
+    gradleEnterprise {
+        buildScan {
+            File buildDir = settings.gradle.rootProject.getBuildDir()
+            buildDir.mkdirs()
+            new File(buildDir, "build-scan-uri.txt").text = "(build scan not generated)"
+            buildScanPublished { scan ->
+                if (buildDir.exists()) {
+                    new File(buildDir, "build-scan-uri.txt").text = "${scan.buildScanUri}\n"
+                }
+            }
+        }
+    }
 }

@@ -43,3 +43,24 @@
 
 6. 此外, 或许需要参考项目中的 `import-into-idea.md` 文件, 执行build命令?
    > 此次, 编译通过未使用到该文件. 可能是 idea 版本比较新? 版本: 2021.1.3
+
+## 添加自定义模块进行测试
+
+1. 以 gradle 的方式创建模块
+2. 修改默认文件 `build.gradle` 文件 -> `模块名.gradle`
+   * 如果不进行修改, 会导致即使在 `build.gradle` 文件中声明了依赖, 依然无法在模块中使用
+   * 原因: spring 项目中的 `setting.gradle` 文件中存在如下代码
+
+      ```gradle
+         rootProject.name = "spring"
+         // 此处导致新建模块的 gradle 文件   命名格式: 模块名.gradle  而不是 默认的 build.gradle
+         rootProject.children.each { project ->
+            project.buildFileName = "${project.name}.gradle"
+         }
+      ```
+
+3. 执行测试代码时, 会执行许多 task
+   * 解决方法: 修改编译环境中的 gradle 配置, 将 `Build and run using` 和 `Run tests using` 配置修改为  `idea` 即可
+      * 注意事项: 在切换为 idea 后, 可能之前可以成功编译的项目, 现在会报错找不到类.
+      * 解决方法: 查看缺失类所在的模块, 然后在模块的 gradle 文件中, 添加对应的 模块依赖 即可解决
+      * 出现原因: 对于部分依赖使用的是 optional , idea处理时没有导入相关依赖, gradle处理时为什么有, 不是很清楚(gradle暂时还没学会, 后续补上)
