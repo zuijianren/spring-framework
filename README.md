@@ -1,38 +1,45 @@
-# <img src="src/docs/spring-framework.png" width="80" height="80"> Spring Framework [![Build Status](https://ci.spring.io/api/v1/teams/spring-framework/pipelines/spring-framework-5.3.x/jobs/build/badge)](https://ci.spring.io/teams/spring-framework/pipelines/spring-framework-5.3.x?groups=Build") [![Revved up by Gradle Enterprise](https://img.shields.io/badge/Revved%20up%20by-Gradle%20Enterprise-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.spring.io/scans?search.rootProjectNames=spring)
+# 源码学习
 
-This is the home of the Spring Framework: the foundation for all [Spring projects](https://spring.io/projects). Collectively the Spring Framework and the family of Spring projects are often referred to simply as "Spring". 
+## 源码编译步骤
 
-Spring provides everything required beyond the Java programming language for creating enterprise applications for a wide range of scenarios and architectures. Please read the [Overview](https://docs.spring.io/spring/docs/current/spring-framework-reference/overview.html#spring-introduction) section as reference for a more complete introduction.
+1. 根据 `gradle/wrapper/gradle-wrapper.properties` 文件下载 gradle 对应版本, 并在下载完成后, 修改原路径如下
 
-## Code of Conduct
+   ```properties
+    #distributionUrl=https\://services.gradle.org/distributions/gradle-7.5.1-bin.zip
+    distributionUrl=file:///d:/gradle-7.6/gradle-7.6-all.zip
+    ```
 
-This project is governed by the [Spring Code of Conduct](CODE_OF_CONDUCT.adoc). By participating, you are expected to uphold this code of conduct. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+2. 根据 `gradle/ide.gradle` 为项目设置正确的 jdk 版本
+   > tips: 需要确保本地 jdk 版本为指定版本对应的最新版本, 否则可能会报错类找不到
+3. 修改仓库地址. 修改 `build.gradle` 文件
 
-## Access to Binaries
+   ```gradle
+   repositories {
+      mavenLocal() //先从maven本地仓库寻找jar包
+      maven { name 'ali'; url 'https://maven.aliyun.com/repository/public/'} //阿里镜像仓库
+      mavenCentral()
+      maven { url "https://repo.spring.io/libs-spring-framework-build" }
+   }
 
-For access to artifacts or a distribution zip, see the [Spring Framework Artifacts](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-Artifacts) wiki page.
+   // 测试仓库地址是否生效 函数 
+   // 项目路径 cmd 下, 执行  `gradle showRepos` 命令
+   tasks.register('showRepos') {
+      doLast {
+         println "All repos:"
+         println repositories.collect { it.name + "=" + it.url }
+      }
+   }
 
-## Documentation
+   ```
 
-The Spring Framework maintains reference documentation ([published](https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/) and [source](src/docs/asciidoc)), GitHub [wiki pages](https://github.com/spring-projects/spring-framework/wiki), and an
-[API reference](https://docs.spring.io/spring-framework/docs/current/javadoc-api/). There are also [guides and tutorials](https://spring.io/guides) across Spring projects.
+4. 关闭代码检验. 修改 `build.gradle` 文件. 搜索 'checkstyle' 关键词, 注销相关代码
+   > 避免自建测试模块还需要添加许多不必要的说明文件才能运行
 
-## Micro-Benchmarks
+5. 控制台乱码显示问题解决, 修改 idea->help->Edit Custom VM Options 添加如下配置
 
-See the [Micro-Benchmarks](https://github.com/spring-projects/spring-framework/wiki/Micro-Benchmarks) wiki page.
+   ```txt
+   -Dfile.encoding=UTF-8
+   ```
 
-## Build from Source
-
-See the [Build from Source](https://github.com/spring-projects/spring-framework/wiki/Build-from-Source) wiki page and the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
-## Continuous Integration Builds
-
-Information regarding CI builds can be found in the [Spring Framework Concourse pipeline](ci/README.adoc) documentation.
-
-## Stay in Touch
-
-Follow [@SpringCentral](https://twitter.com/springcentral), [@SpringFramework](https://twitter.com/springframework), and its [team members](https://twitter.com/springframework/lists/team/members) on Twitter. In-depth articles can be found at [The Spring Blog](https://spring.io/blog/), and releases are announced via our [news feed](https://spring.io/blog/category/news).
-
-## License
-
-The Spring Framework is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+6. 此外, 或许需要参考项目中的 `import-into-idea.md` 文件, 执行build命令?
+   > 此次, 编译通过未使用到该文件. 可能是 idea 版本比较新? 版本: 2021.1.3

@@ -304,12 +304,20 @@ configure(allprojects) { project ->
 	}
 }
 
+tasks.register('showRepos') {
+	doLast {
+		println "All repos:"
+		println repositories.collect { it.name + "=" + it.url }
+	}
+}
+
+
 configure([rootProject] + javaProjects) { project ->
 	group = "org.springframework"
 
 	apply plugin: "java"
 	apply plugin: "java-test-fixtures"
-	apply plugin: "checkstyle"
+//	apply plugin: "checkstyle"
 	apply plugin: 'org.springframework.build.compile'
 	apply from: "${rootDir}/gradle/toolchains.gradle"
 	apply from: "${rootDir}/gradle/ide.gradle"
@@ -341,10 +349,10 @@ configure([rootProject] + javaProjects) { project ->
 		systemProperty("io.netty.leakDetection.level", "paranoid")
 	}
 
-	checkstyle {
-		toolVersion = "10.7.0"
-		configDirectory.set(rootProject.file("src/checkstyle"))
-	}
+//	checkstyle {
+//		toolVersion = "10.7.0"
+//		configDirectory.set(rootProject.file("src/checkstyle"))
+//	}
 
 	dependencies {
 		testImplementation("org.junit.jupiter:junit-jupiter-api")
@@ -364,7 +372,7 @@ configure([rootProject] + javaProjects) { project ->
 		// JSR-305 only used for non-required meta-annotations
 		compileOnly("com.google.code.findbugs:jsr305")
 		testCompileOnly("com.google.code.findbugs:jsr305")
-		checkstyle("io.spring.javaformat:spring-javaformat-checkstyle:0.0.31")
+//		checkstyle("io.spring.javaformat:spring-javaformat-checkstyle:0.0.31")
 	}
 
 	ext.javadocLinks = [
@@ -428,9 +436,9 @@ configure(rootProject) {
 		}
 	}
 
-	tasks.named("checkstyleNohttp").configure {
-		maxHeapSize = "1g"
-	}
+//	tasks.named("checkstyleNohttp").configure {
+//		maxHeapSize = "1g"
+//	}
 
 	publishing {
 		publications {
