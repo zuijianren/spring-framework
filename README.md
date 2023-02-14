@@ -60,7 +60,4 @@
       ```
 
 3. 执行测试代码时, 会执行许多 task
-   * 解决方法: 修改编译环境中的 gradle 配置, 将 `Build and run using` 和 `Run tests using` 配置修改为  `idea` 即可
-      * 注意事项: 在切换为 idea 后, 可能之前可以成功编译的项目, 现在会报错找不到类.
-      * 解决方法: 查看缺失类所在的模块, 然后在模块的 gradle 文件中, 添加对应的 模块依赖 即可解决
-      * 出现原因: 对于部分依赖使用的是 optional , idea处理时没有导入相关依赖, gradle处理时为什么有, 不是很清楚(gradle暂时还没学会, 后续补上)
+    * 解决方法: 修改编译环境中的 gradle 配置, 将 `Build and run using` 和 `Run tests using` 配置修改为  `idea` 即可

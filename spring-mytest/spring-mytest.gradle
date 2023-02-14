@@ -10,14 +10,22 @@ repositories {
 }
 
 dependencies {
+
+    implementation(project(":spring-jdbc"))
+    implementation(project(":spring-context"))
+
+    // 添加 aop 模块支持
+    implementation("org.aspectj:aspectjweaver")
+
+
+//    implementation(project(":spring-web"))
+
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+//    implementation group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.6'
+//    implementation group: 'org.mybatis', name: 'mybatis', version: '3.4.5'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    implementation(project(":spring-aop"))
-    implementation(project(":spring-beans"))
-    implementation(project(":spring-context"))
-    implementation(project(":spring-core"))
-    implementation(project(":spring-expression"))
-    implementation(project(":spring-instrument"))
 }
 
 test {
